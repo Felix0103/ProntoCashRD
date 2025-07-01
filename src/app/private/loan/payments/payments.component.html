@@ -1,0 +1,99 @@
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-buttons slot="start">
+      <ion-menu-button ></ion-menu-button>
+    </ion-buttons>
+    <ion-title>Cobros</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+   <ion-card-content>
+      <ion-grid class="ion-no-padding">
+        <ion-row class="ion-align-items-center">
+            <ion-col size="6">
+                 <ion-item>
+                    <ion-input
+                      label="Inicio"
+                      [(ngModel)]="startDate"
+
+                      labelPlacement="stacked"
+                      type="date"
+                      id="open_cal"
+                      [readonly]="false"
+                    ></ion-input>
+                    <ion-modal
+                      trigger="open_cal"
+                      [keepContentsMounted]="true"
+                      [initialBreakpoint]="0.65"
+
+                    >
+                      <ng-template>
+                        <ion-datetime
+                          presentation="date"
+                          [(ngModel)]="date_start"
+                          mode="md"
+                          [ngModelOptions]="{standalone: true}"
+                          (ionChange)="datePickStart()"
+                          [showDefaultButtons]="true"
+
+                        ></ion-datetime>
+                      </ng-template>
+                    </ion-modal>
+              </ion-item>
+            </ion-col>
+
+          <ion-col size="6">
+                 <ion-item>
+                    <ion-input
+                      label="Final"
+                      [(ngModel)]="endDate"
+
+                      labelPlacement="stacked"
+                      type="date"
+                      id="open_cal_end"
+                      [readonly]="false"
+                    ></ion-input>
+                    <ion-modal
+                      trigger="open_cal_end"
+                      [keepContentsMounted]="true"
+                      [initialBreakpoint]="0.65"
+
+                    >
+                      <ng-template>
+                        <ion-datetime
+                          presentation="date"
+                          [(ngModel)]="date_end"
+                          mode="md"
+                          [ngModelOptions]="{standalone: true}"
+                          (ionChange)="datePickEnd()"
+                          [showDefaultButtons]="true"
+
+                        ></ion-datetime>
+                      </ng-template>
+                    </ion-modal>
+              </ion-item>
+            </ion-col>
+
+        </ion-row>
+      </ion-grid>
+    <ion-button expand="block" (click)="search()">Buscar cobros</ion-button>
+   </ion-card-content>
+
+
+    <ion-list *ngFor="let payment of payments">
+      <ion-item>
+
+        <ion-label>
+          <h3>{{ payment.loan.client.first_name | titlecase}} {{ payment.loan.client.last_name | titlecase}}</h3>
+          <h3>Monto {{ payment.total_amount | currency:'DOP'  }}</h3>
+          <p>Fecha: {{ payment.payment_date | date:'shortDate' }}</p>
+        </ion-label>
+
+        <ion-button size="small" (click)="viewReceipt(payment)">Recibo</ion-button>
+        <ion-button color="success" size="small" (click)="sentReceipt(payment)">Compartir</ion-button>
+
+
+      </ion-item>
+    </ion-list>
+</ion-content>

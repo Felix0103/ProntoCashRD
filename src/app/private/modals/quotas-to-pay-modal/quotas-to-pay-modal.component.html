@@ -1,0 +1,29 @@
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-title>Seleccionar Ubicación</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="close()">Cerrar</ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+<ion-content>
+<ion-card>
+    <ion-card-header>
+      <ion-card-title>Registrar Pago</ion-card-title>
+    </ion-card-header>
+
+    <ion-card-content>
+      <form [formGroup]="formPayment" (ngSubmit)="submit()">
+        <ion-item>
+          <ion-input  label="Monto a pagar"    labelPlacement="floating"  aria-label  type="number" formControlName="amount"></ion-input>
+        </ion-item>
+
+        <ion-button expand="block" type="submit" [disabled]="formPayment.invalid">
+          Pagar
+        </ion-button>
+      </form>
+    </ion-card-content>
+  </ion-card>
+</ion-content>
+
+

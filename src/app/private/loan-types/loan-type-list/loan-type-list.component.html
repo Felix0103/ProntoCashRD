@@ -1,0 +1,54 @@
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-buttons slot="start">
+      <ion-menu-button ></ion-menu-button>
+    </ion-buttons>
+    <ion-title>Tipos de prestamos</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <!-- Buscador -->
+  <ion-searchbar aria-hidden [(ngModel)]="filter" placeholder="Buscar tipo de prestamos..."></ion-searchbar>
+
+  <!-- Refrescar -->
+  <ion-refresher slot="fixed" (ionRefresh)="loadLoanTypes($event)">
+    <ion-refresher-content></ion-refresher-content>
+  </ion-refresher>
+
+  <ion-list  *ngIf="!isLoading; else cargando">
+
+    <ion-card *ngFor="let type of loanTypeFiltered()" (click)="editLoanType(type.id)">
+      <ion-card-header>
+        <ion-card-title>{{ type.name }}</ion-card-title>
+      </ion-card-header>
+
+      <ion-card-content>
+        <p>{{ type.description }}</p>
+        <ion-chip *ngFor="let freq of type.allowed_frequencies" color="secondary" outline>
+          <ion-label>{{ freq | titlecase }}</ion-label>
+        </ion-chip>
+        <p>
+          <strong>Monto permitido:</strong>
+          {{ type.min_amount | currency }} - {{ type.max_amount | currency }}
+        </p>
+      </ion-card-content>
+    </ion-card>
+
+    <ion-item lines="none" *ngIf="loanTypes.length ===0 && !isLoading"> No tienes tipos de prestamos Creados</ion-item>
+  </ion-list>
+
+
+
+  <!-- Cargando -->
+  <ng-template #cargando>
+    <ion-spinner name="dots" class="ion-padding"></ion-spinner>
+  </ng-template>
+
+  <!-- Botón flotante para agregar cliente -->
+  <ion-fab vertical="bottom" horizontal="end" slot="fixed">
+    <ion-fab-button (click)="newLoanType()">
+      <ion-icon name="add"></ion-icon>
+    </ion-fab-button>
+  </ion-fab>
+</ion-content>

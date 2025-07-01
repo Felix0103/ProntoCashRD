@@ -1,0 +1,65 @@
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-buttons slot="start">
+      <ion-menu-button ></ion-menu-button>
+    </ion-buttons>
+    <ion-title>Clientes</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <!-- Buscador -->
+  <ion-searchbar aria-hidden [(ngModel)]="filter" placeholder="Buscar cliente..."></ion-searchbar>
+
+  <!-- Refrescar -->
+  <ion-refresher slot="fixed" (ionRefresh)="loadClients($event)">
+    <ion-refresher-content></ion-refresher-content>
+  </ion-refresher>
+
+  <!-- Lista de clientes -->
+  <ion-list  *ngIf="!isLoading; else cargando">
+
+     <ion-item-sliding *ngFor="let client of clientFiltered()">
+        <ion-item [class.ion-opacity-50]="client.active == 0">
+          <ion-avatar slot="start"  (click)="editClient(client.id)">
+            <ion-icon name="person-outline" size="large"></ion-icon>
+          </ion-avatar>
+          <ion-label  (click)="editClient(client.id)">
+            <h2>{{ client.first_name | titlecase }} {{ client.last_name }}</h2>
+            <p>Cédula: {{ client.identification }}</p>
+            <p>Tel: {{ client.phone_number }}</p>
+            <p>Límite crédito: ${{ client.credit_limit | number:'1.2' }}</p>
+          </ion-label>
+           <ion-badge slot="end" [color]="client.active === 1 ? 'success' : 'danger'">
+              {{ client.active === 1 ? 'Activo': 'Desactivado' }}
+            </ion-badge>
+        </ion-item>
+
+    <ion-item-options side="end">
+      <ion-item-option   class="option-round"  color="danger" *ngIf="client.active==1" (click)="activeClient(client)">
+       <ion-icon name="lock-closed-outline" slot="icon-only"></ion-icon> Desactivar
+      </ion-item-option>
+      <ion-item-option class="option-round"  color="success" *ngIf="client.active==0" (click)="activeClient(client)">
+        <ion-icon name="checkmark-outline" slot="icon-only"></ion-icon> Activar
+      </ion-item-option>
+      <ion-item-option class="option-round"  color="success" *ngIf="client.active==1" (click)="newLoan(client)">
+        <ion-icon name="cash-outline" slot="icon-only"></ion-icon> Crear Prestamo
+      </ion-item-option>
+    </ion-item-options>
+  </ion-item-sliding>
+
+    <ion-item *ngIf="clients.length ===0 && isLoading">No tienes Clientes Creados</ion-item>
+  </ion-list>
+
+  <!-- Cargando -->
+  <ng-template #cargando>
+    <ion-spinner name="dots" class="ion-padding"></ion-spinner>
+  </ng-template>
+
+  <!-- Botón flotante para agregar cliente -->
+  <ion-fab vertical="bottom" horizontal="end" slot="fixed">
+    <ion-fab-button (click)="newClient()">
+      <ion-icon name="add"></ion-icon>
+    </ion-fab-button>
+  </ion-fab>
+</ion-content>

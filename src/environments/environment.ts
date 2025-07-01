@@ -1,16 +1,18 @@
-// This file can be replaced during build by using the `fileReplacements` array.
-// `ng build` replaces `environment.ts` with `environment.prod.ts`.
-// The list of file replacements can be found in `angular.json`.
-
 export const environment = {
-  production: false
+  production: false,
+  appName: 'ProntoCashRD',
+  apiURL: 'http://127.0.0.1:8000',
+  appShellConfig: {
+    debug: false,
+    networkDelay: 500
+  },
+  weekDays : [
+  { name: 'Domingo', value: 0 },
+  { name: 'Lunes', value: 1 },
+  { name: 'Martes', value: 2 },
+  { name: 'Miércoles', value: 3 },
+  { name: 'Jueves', value: 4 },
+  { name: 'Viernes', value: 5 },
+  { name: 'Sábado', value: 6 },
+]
 };
-
-/*
- * For easier debugging in development mode, you can import the following file
- * to ignore zone related error stack frames such as `zone.run`, `zoneDelegate.invokeTask`.
- *
- * This import should be commented out in production mode because it will have a negative impact
- * on performance if an error is thrown.
- */
-// import 'zone.js/plugins/zone-error';  // Included with Angular CLI.

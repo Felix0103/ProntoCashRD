@@ -1,0 +1,92 @@
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-buttons slot="start">
+      <ion-back-button text="" default-href="/loans"></ion-back-button>
+    </ion-buttons>
+    <ion-title>
+      Nuevo prestamo
+    </ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+  <ion-item>
+    <ion-label>Cliente</ion-label>
+    <ion-button [color]="selectedCustomer?'success':'primary'" expand="block" (click)="openCustomerSearch()">
+      <span *ngIf="selectedCustomer">{{ selectedCustomer?.first_name | titlecase}} {{selectedCustomer?.last_name | titlecase}}</span>
+      <span *ngIf="!selectedCustomer">Buscar Cliente</span>
+    </ion-button>
+  </ion-item>
+
+  <form  [formGroup]="loanForm" (ngSubmit)="saveLoan()">
+    <ion-item>
+      <ion-select     label="Tipo de prestamo"    labelPlacement="floating" aria-label formControlName="loan_type_id" >
+        <ion-select-option value="">Seleccione un tipo de prestamo</ion-select-option>
+        <ion-select-option *ngFor="let item of loanTypes" [value]="item.id">{{item.name}}</ion-select-option>
+      </ion-select>
+    </ion-item>
+    <ion-item>
+      <ion-select   label="Monto de prestamo"    labelPlacement="floating" aria-label formControlName="loan_type_detail_id" >
+        <ion-select-option value="">Seleccione un monto</ion-select-option>
+        <ion-select-option *ngFor="let item of loanTypeDetails" [value]="item.id">{{item.loan_amount | number:'1.2-2'  }}</ion-select-option>
+      </ion-select>
+    </ion-item>
+    <ion-item *ngIf="loanForm.get('loan_type_detail_id')?.value">
+        <ion-label class="label-quotas">Cuotas: {{detailSelected.total_quotas}} de {{detailSelected.quota_amount | number:'1.2-2'}}</ion-label>
+    </ion-item>
+
+    <ion-item>
+        <ion-input
+          label="Fecha de prestamo"
+          formControlName="start_date"
+
+          labelPlacement="stacked"
+          type="date"
+          id="open_cal"
+          [readonly]="false"
+        ></ion-input>
+        <ion-modal
+          trigger="open_cal"
+          [keepContentsMounted]="true"
+          [initialBreakpoint]="0.65"
+
+        >
+          <ng-template>
+            <ion-datetime
+              presentation="date"
+              [(ngModel)]="date_event"
+              mode="md"
+              [ngModelOptions]="{standalone: true}"
+              (ionChange)="datePick()"
+              [showDefaultButtons]="true"
+
+            ></ion-datetime>
+          </ng-template>
+        </ion-modal>
+  </ion-item>
+  <ion-item>
+    <ion-label>Cobrador</ion-label>
+    <ion-button [color]="selectedCollector?'success':'primary'" expand="block" (click)="openCollectorSearch()">
+      <span *ngIf="selectedCollector">{{ selectedCollector?.first_name | titlecase}} {{selectedCollector?.last_name | titlecase}}</span>
+      <span *ngIf="!selectedCollector">Buscar Cobrador</span>
+    </ion-button>
+  </ion-item>
+  <ion-item>
+    <ion-label position="stacked" class="sky-days"><ion-badge color="secondary"><span >Días que NO se cobrará</span></ion-badge> </ion-label>
+    <ion-grid>
+      <ion-row *ngFor="let row of chunkedWeekDays">
+        <ion-col  *ngFor="let day of row; let i = index">
+          <ion-item lines="none" >
+            <ion-checkbox label-placement="stacked" alignment="start" [formControl]="getSkipControl(day.value)">{{day.name}}</ion-checkbox>
+          </ion-item>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+  </ion-item>
+  <br>
+  <br>
+  <ion-button expand="block" type="submit" [disabled]="loanForm.invalid">
+    Guardar Préstamo
+  </ion-button>
+  </form>
+</ion-content>

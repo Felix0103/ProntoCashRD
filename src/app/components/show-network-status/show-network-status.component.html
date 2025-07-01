@@ -1,0 +1,9 @@
+
+<div class="offline" *ngIf="!conected">
+  <ion-icon name="cloud-offline"></ion-icon>
+  <p>Por favor verifique su acceso a Internet</p>
+</div>
+<div class="online" *ngIf="conected">
+  <ion-icon name="wifi"></ion-icon>
+  <p>Estas conectado a una red</p>
+</div>

@@ -1,0 +1,19 @@
+<div class="counter-input">
+
+  <div class="button-outer text-center">
+    <div class="button-wrapper">
+      <ion-button [disabled]="_counterValue<2" class="counter-icon" (click)="decrease()">
+        <ion-icon slot="icon-only" name="remove"></ion-icon>
+      </ion-button>
+    </div>
+  </div>
+  <ion-input  [min]="1" [max]="maximo"  class="input-counter-custom" type="number" [(ngModel)]="counterValue"> </ion-input>
+  <div class="button-outer text-center">
+    <div class="button-wrapper">
+      <ion-button class="counter-icon" (click)="increase()">
+        <ion-icon slot="icon-only" name="add"></ion-icon>
+      </ion-button>
+    </div>
+  </div>
+  
+</div>

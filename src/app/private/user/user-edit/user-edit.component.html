@@ -1,0 +1,49 @@
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-buttons slot="start">
+      <ion-back-button text="" default-href="/user"></ion-back-button>
+    </ion-buttons>
+    <ion-title>
+      Edición de Usuario
+    </ion-title>
+  </ion-toolbar>
+
+</ion-header>
+
+<ion-content class="forms-product-content">
+
+
+  <form class="product-form" [formGroup]="userForm">
+    <ion-list class="inputs-list" lines="full">
+
+      <ion-item class="input-item" >
+        <ion-input [readonly]="true" label="Nombre" labelPlacement="floating" type="text" formControlName="first_name" ></ion-input>
+      </ion-item>
+
+      <ion-item class="input-item">
+        <ion-input [readonly]="true" label="Apellido" labelPlacement="floating" type="text" formControlName="last_name"></ion-input>
+      </ion-item>
+
+      <ion-item class="input-item">
+        <ion-input [readonly]="true" label="Email" labelPlacement="floating" type="text" formControlName="email"></ion-input>
+      </ion-item>
+      <br>
+
+ 
+   
+    </ion-list>
+  
+  </form>
+  <form [formGroup]="checkBoxForm" *ngIf="checkBoxForm">
+    <ion-list class="inputs-list" lines="full">
+      <ion-item *ngFor="let item of roles" >
+        <ion-checkbox labelPlacement="end" slot="start"  [formControlName]="item.name"> {{ item.name }} </ion-checkbox>
+      </ion-item>
+    </ion-list>
+  
+  </form>
+
+  <br>
+  <ion-button (click)="update()" class="submit-btn" type="submit" expand="block" fill="outline" >Asignar Roles</ion-button> 
+
+</ion-content>

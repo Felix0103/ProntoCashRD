@@ -1,0 +1,63 @@
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-buttons slot="start">
+      <ion-back-button text="" default-href="/clients"></ion-back-button>
+    </ion-buttons>
+    <ion-title>
+      Nuevo Cliente
+    </ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+  <form [formGroup]="formClient" (ngSubmit)="saveClient()">
+    <ion-item>
+      <ion-label position="floating">Nombre</ion-label>
+      <ion-input  aria-label formControlName="first_name"></ion-input>
+    </ion-item>
+
+    <ion-item>
+      <ion-label position="floating">Apellido</ion-label>
+      <ion-input  aria-label formControlName="last_name"></ion-input>
+    </ion-item>
+
+    <ion-item>
+      <ion-label position="floating">Cédula</ion-label>
+      <ion-input  aria-label  formControlName="identification"></ion-input>
+    </ion-item>
+
+
+    <ion-item>
+      <ion-label position="floating">Teléfono</ion-label>
+      <ion-input  aria-label aria-label formControlName="phone_number"></ion-input>
+    </ion-item>
+
+    <ion-item>
+      <ion-label position="floating">Dirección</ion-label>
+      <ion-input  aria-label formControlName="address"></ion-input>
+    </ion-item>
+
+    <ion-item>
+      <ion-label position="floating">Email</ion-label>
+      <ion-input  aria-label type="email" formControlName="email"></ion-input>
+    </ion-item>
+   <ion-item>
+      <ion-label position="floating">Límite de crédito</ion-label>
+      <ion-input aria-label formControlName="credit_limit" type="number" min="0"></ion-input>
+    </ion-item>
+    <ion-text color="danger" *ngIf="formClient?.get('credit_limit')?.invalid && formClient?.get('credit_limit')?.touched">
+      Límite debe ser igual o mayor a 0
+    </ion-text>
+    <ion-item>
+      <ion-label position="floating">Estado</ion-label>
+       <ion-radio-group formControlName="active">
+          <ion-radio slot="start" value="1">Activo</ion-radio> &nbsp; &nbsp; &nbsp;
+          <ion-radio slot="start" value="0">Desactivado</ion-radio>
+      </ion-radio-group>
+    </ion-item>
+
+    <ion-button expand="block" type="submit" [disabled]="formClient.invalid">
+      Guardar Cliente
+    </ion-button>
+  </form>
+</ion-content>

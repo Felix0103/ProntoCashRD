@@ -1,0 +1,58 @@
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-buttons slot="start">
+      <ion-back-button text="" default-href="/user"></ion-back-button>
+    </ion-buttons>
+    <ion-title>
+      Configuración de Usuario
+    </ion-title>
+  </ion-toolbar>
+
+</ion-header>
+
+<ion-content class="forms-product-content">
+
+
+  <form class="product-form" [formGroup]="userForm">
+    <ion-list class="inputs-list" lines="full">
+
+      <ion-item class="input-item" >
+        <ion-input [readonly]="true" label="Nombre" labelPlacement="floating" type="text" formControlName="first_name" ></ion-input>
+      </ion-item>
+
+      <ion-item class="input-item">
+        <ion-input [readonly]="true" label="Apellido" labelPlacement="floating" type="text" formControlName="last_name"></ion-input>
+      </ion-item>
+
+      <ion-item class="input-item">
+        <ion-input [readonly]="true" label="Email" labelPlacement="floating" type="text" formControlName="email"></ion-input>
+      </ion-item>
+      <ion-item class="input-item">
+
+        <ion-select label="Almacen Asignado" label-placement="stacked" formControlName="ware_house_id">
+          <ion-select-option [value]="0" >Ninguno Almacen</ion-select-option>
+
+          <ion-select-option *ngFor="let warehouse of warehouses" [value]="warehouse.id" >{{ warehouse.warehouse_name }}</ion-select-option>
+        </ion-select>
+      </ion-item>
+      <ion-item class="input-item">
+        <ion-select label="Tipo de Comision" label-placement="stacked" formControlName="commission_type">
+          <ion-select-option *ngFor="let commissionType of commissionTypes" [value]="commissionType.id" >{{ commissionType.name }}</ion-select-option>
+        </ion-select>
+      </ion-item>
+      <ion-item class="input-item">
+        <ion-input label="Porcentaje de comisión" labelPlacement="floating" type="text" formControlName="commission_percentage"></ion-input>
+      </ion-item>
+    
+
+      
+      <br>
+    </ion-list>
+  
+  </form>
+
+
+  <br>
+  <ion-button (click)="update()" class="submit-btn" type="submit" expand="block" fill="outline" >Guardar</ion-button> 
+
+</ion-content>

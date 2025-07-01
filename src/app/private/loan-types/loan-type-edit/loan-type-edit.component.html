@@ -1,0 +1,71 @@
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-buttons slot="start">
+      <ion-back-button text="" default-href="/loan-types"></ion-back-button>
+    </ion-buttons>
+    <ion-title>
+      Editar tipo de prestamo
+    </ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+  <form [formGroup]="loanTypeForm" (ngSubmit)="updateLoanType()" *ngIf="loanTypeForm; else cargando">
+
+    <ion-item>
+      <ion-input label="Nombre del tipo de prestamo" labelPlacement="floating" aria-label formControlName="name"></ion-input>
+    </ion-item>
+
+    <ion-item>
+      <ion-textarea   label="Descripción"   labelPlacement="floating" aria-label formControlName="description"></ion-textarea>
+    </ion-item>
+
+    <ion-item>
+      <ion-input label="Monto mínimo" aria-label labelPlacement="floating" type="number" formControlName="min_amount"></ion-input>
+    </ion-item>
+
+    <ion-item>
+      <ion-input label="Monto máximo" aria-label labelPlacement="floating" type="number" formControlName="max_amount"></ion-input>
+    </ion-item>
+
+
+    <ion-item>
+      <ion-select     label="Frecuencia"    labelPlacement="floating" aria-label formControlName="allowed_frequencies" multiple="true">
+        <ion-select-option value="daily">Diario</ion-select-option>
+        <ion-select-option value="weekly">Semanal</ion-select-option>
+        <ion-select-option value="biweekly">Quincenal</ion-select-option>
+        <ion-select-option value="monthly">Mensual</ion-select-option>
+      </ion-select>
+    </ion-item>
+    <ion-item>
+      <ion-label position="floating">Estado</ion-label>
+       <ion-radio-group aria-label formControlName="active">
+          <ion-radio slot="start" value="1">Activo</ion-radio> &nbsp; &nbsp; &nbsp;
+          <ion-radio slot="start" value="0">Desactivado</ion-radio>
+      </ion-radio-group>
+    </ion-item>
+
+    <ion-button expand="block" type="submit" [disabled]="loanTypeForm.invalid">
+      Guardar Tipo de Préstamo
+    </ion-button>
+  </form>
+  <ng-template #cargando>
+    <ion-spinner name="dots" class="ion-padding"></ion-spinner>
+  </ng-template>
+  <ion-list *ngIf="loanTypeForm">
+    <ion-list-header>
+      <ion-label>Detalles  </ion-label>
+      <ion-item lines="none"> <ion-button fill="solid" shape="round" color="success"  (click)="addDetail()"> <ion-icon  slot="icon-only"  name="add-outline"></ion-icon> </ion-button></ion-item>
+    </ion-list-header>
+
+    <ion-item *ngFor="let detail of loanTypeDetails">
+      <ion-label>
+        <h2>{{ detail.loan_amount | number:'1.2-2'}}</h2>
+        <p>Cuotas: {{ detail.total_quotas  }} de {{ detail.quota_amount | number:'1.2-2' }}</p>
+      </ion-label>
+      <ion-button fill="clear" color="danger" (click)="deleteDetail(detail)">Eliminar</ion-button>
+    </ion-item>
+
+
+  </ion-list>
+</ion-content>

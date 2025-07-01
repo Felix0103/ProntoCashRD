@@ -1,0 +1,49 @@
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-title>Recibo de Pago</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="close()">Cerrar</ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+<ion-content>
+  <ion-card *ngIf="payment">
+    <ion-card-header>
+      <ion-card-title>Recibo de pago</ion-card-title>
+    </ion-card-header>
+
+    <ion-card-content>
+      <p><strong>Fecha:</strong> {{ payment.payment_date | date:'dd/MM/yyyy' }}</p>
+      <p><strong>Monto total:</strong> {{ payment.total_amount | number:'1.2-2' }} RD$</p>
+      <ion-list>
+        <ion-item *ngFor="let detail of payment.loan_payment_details">
+          <ion-label>
+            Cuota #{{ detail.loan_detail.number_quota }}
+            <p>Abonado: {{ detail.amount_applied | number:'1.2-2' }} RD$</p>
+          </ion-label>
+        </ion-item>
+      </ion-list>
+
+      <ion-grid class="ion-no-padding">
+        <ion-row class="ion-justify-content-center">
+          <!-- Botón compartir -->
+          <ion-col size="6">
+            <ion-button expand="block" color="success" (click)="sentReceipt()">
+              <ion-icon name="logo-whatsapp" slot="start"></ion-icon>
+              Compartir
+            </ion-button>
+          </ion-col>
+
+          <!-- Botón imprimir -->
+          <ion-col size="6">
+            <ion-button expand="block" color="primary" (click)="print()">
+              <ion-icon name="print" slot="start"></ion-icon>
+              Imprimir
+            </ion-button>
+          </ion-col>
+        </ion-row>
+     </ion-grid>
+    </ion-card-content>
+  </ion-card>
+
+</ion-content>

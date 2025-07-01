@@ -1,0 +1,212 @@
+
+.mini-stats-row {
+    padding: 5px;
+  }
+  
+  .mini-stat-col {
+    padding: 5px;
+  }
+
+  .highlighted-stat-green{
+    &.dark-highlight {
+        --stat-title-color: #e7fcff;
+    
+        background: #66a216 !important;
+      }
+      .stat-reference {
+        color: #1a7d1c  !important;;
+      }
+  } 
+  .highlighted-stat {
+    --stat-title-color: #42516a;
+  
+    padding: 15px;
+    border-radius: 12px;
+    aspect-ratio: 1/0.3;
+    background: #f2f8fc;
+  
+    &.dark-highlight {
+      --stat-title-color: #e7fcff;
+  
+      background: #2b93e6;
+    }
+  
+    // ? Stat highlight with flex properties
+    &.number-stat-outer {
+      display: flex;
+      flex-direction: column;
+      height: 100%;
+      width: 100%;
+    }
+  
+    &.progress-bar-stat-outer {
+      display: flex;
+      flex-direction: column;
+      height: 100%;
+      width: 100%;
+    }
+  
+    &.doughnut-chart-stat-outer {
+      display: flex;
+      flex-direction: column;
+    }
+  
+    .stat-title {
+      margin: 0px 0px 6px;
+      font-size: 4.6vw;
+      color: var(--stat-title-color);
+    }
+  
+    .number-stat-wrapper {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      flex-grow: 1;
+  
+      .stat-value {
+        font-size: 8vw;
+        font-weight: 800;
+        text-align: center;
+        color: #feffff;
+      }
+    
+      .stat-reference {
+        font-size: 16px;
+        font-weight: 600;
+        text-align: center;
+        color: #70bcf1;
+      }
+    }
+  
+    .progress-bar-stat-wrapper {
+      --progress-bar-height: 20vw;
+      --progress-bar-width: 14px;
+  
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-grow: 1;
+  
+      .progress-bar-stat {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        height: 100%;
+      }
+  
+      .stat-value {
+        color: #1e3461;
+        font-size: 4.6vw;
+        font-weight: 800;
+        line-height: 1;
+        padding-top: 14px;
+      }
+  
+      .stat-reference {
+        color: #629acf;
+        font-size: 2.6vw;
+        font-weight: 600;
+        text-transform: capitalize;
+      }
+  
+      .progress-bar-container {
+        // ! Same value as progressbar height
+        min-height: var(--progress-bar-height);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+  
+        ion-progress-bar {
+          transform: rotate(-90deg);
+          // ? As it is rotated, height references the actual width of the object
+          height: var(--progress-bar-width);
+          // ? Half the height
+          border-radius: calc(var(--progress-bar-width)/2);
+          // ? As it is rotated, width references the actual height of the object
+          width: var(--progress-bar-height);
+  
+          &::part(track) {
+            background: #d5e7f8;
+          }
+  
+          // ? Inner bar
+          &::part(progress) {
+            // ? Ionic scales the progress bar. When scaling, the border radius gets distorted (see: https://codepen.io/thebabydino/pen/VJQMmJ)
+            // ! A workaround could be found here: https://css-tricks.com/various-methods-for-expanding-a-box-while-preserving-the-border-radius/
+            border-radius: 0px;
+            background: #2c93e8;
+          }
+        }
+      }
+    }
+  
+    .custom-doughnut-chart-wrapper {
+      display: flex;
+      justify-content: center;
+      // ! This value sets the height of the chart
+      height: 40vw;
+      width: 80%;
+      margin: auto 10%;
+    }
+  }
+
+
+
+// Custom variables
+// Note:  These ones were added by us and have nothing to do with Ionic CSS Custom Properties
+:host {
+  --page-margin: var(--app-narrow-margin);
+
+  --page-categories-gutter: calc(var(--page-margin) / 4);
+
+  --page-category-background: var(--ion-color-medium);
+  --page-category-background-rgb: var(--ion-color-medium-rgb);
+}
+
+// Note:  All the CSS variables defined below are overrides of Ionic elements CSS Custom Properties
+.categories-list {
+  --ion-grid-column-padding: var(--page-categories-gutter);
+
+  padding: calc(var(--page-categories-gutter) * 3);
+  height: 100%;
+  align-content: flex-start;
+  overflow: scroll;
+
+ 
+
+  .category-item {
+    margin-bottom: 20px;
+    .category-anchor {
+      height: 100%;
+      text-decoration: none;
+      display: flex;
+      justify-content: flex-start;
+      align-items: flex-start;
+
+      .category-title {
+        margin: auto;
+        text-transform: uppercase;
+        font-weight: 400;
+        font-size: 18px;
+        letter-spacing: 1px;
+        padding: calc((var(--page-margin) / 4) * 3) var(--page-margin);
+        color: var(--ion-color-lightest);
+        background-color: var(--page-category-background);
+        border-radius: var(--app-fair-radius);
+      }
+    }
+  }
+
+
+
+  .deals-category {
+    --page-category-background: #074273ad;
+    --page-category-background-rgb: 112,223,112;
+  }
+
+  .real-estate-category {
+    --page-category-background: #0ae65b93;
+    --page-category-background-rgb: 217,69,58;
+  }
+}

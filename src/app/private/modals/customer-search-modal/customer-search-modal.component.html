@@ -1,0 +1,20 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Buscar Cliente</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="close()">Cerrar</ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+  <ion-searchbar aria-hidden [(ngModel)]="searchTerm" placeholder="Buscar por nombre o cédula"></ion-searchbar>
+  <ion-list *ngIf="clients.length > 0">
+    <ion-item *ngFor="let customer of clientFiltered()" (click)="selectCustomer(customer)">
+      <ion-label>
+        <h2>{{ customer.first_name | titlecase }} {{ customer.last_name | titlecase}}</h2>
+        <p>{{ customer.identification }}</p>
+      </ion-label>
+    </ion-item>
+  </ion-list>
+</ion-content>

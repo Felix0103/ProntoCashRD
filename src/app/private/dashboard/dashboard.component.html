@@ -1,0 +1,48 @@
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-buttons slot="start">
+      <ion-menu-button></ion-menu-button>
+    </ion-buttons>
+    <ion-title>
+      Dashboard
+    </ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-row class="mini-stats-row" *ngIf="canCreateInvoice && salesInfo">
+    <ion-col class="mini-stat-col" size="12">
+      <div class="highlighted-stat dark-highlight number-stat-outer">
+        <h4 class="stat-title">Ventas de hoy</h4>
+        <div class="number-stat-wrapper">
+          <span class="stat-value" ngx-charts-count-up [countTo]="salesInfo.Total"   [countPrefix]="'$'">{{salesInfo.Total}}</span>
+        </div>
+      </div>
+    </ion-col>
+  </ion-row>
+  <ion-row class="mini-stats-row" *ngIf="canCreateInvoice && salesInfo">
+    <ion-col class="mini-stat-col" size="12">
+      <div class="highlighted-stat highlighted-stat-green dark-highlight number-stat-outer">
+        <h4 class="stat-title">Revenue</h4>
+        <div class="number-stat-wrapper">
+          <span class="stat-value" ngx-charts-count-up [countTo]="salesInfo.Revenue" [countPrefix]="'$'">salesInfo.Revenue</span>
+        </div>
+      </div>
+    </ion-col>
+  </ion-row>
+
+  <ion-row class="categories-list">
+
+    <ion-col class="category-item deals-category" size="12" *ngIf="canCreateInvoice">
+      <app-image-shell [display]="'cover'" class="category-cover" animation="spinner" [src]="'./assets/images/invoice-new.jpg'">
+        <app-aspect-ratio [ratio]="{w:75, h:30}">
+          <a class="category-anchor" [routerLink]="['/invoice/new']" routerDirection="root" >
+            <h2 class="category-title">Facturar</h2>
+          </a>
+        </app-aspect-ratio>
+      </app-image-shell>
+    </ion-col>
+
+  </ion-row>
+
+</ion-content>

@@ -1,0 +1,25 @@
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-title>Historico de Pagos</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="close()">Cerrar</ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+    <ion-list *ngFor="let payment of payments">
+      <ion-item>
+        <ion-label>
+          <h3>Pago de {{ payment.total_amount | number:'1.2-2' }} RD$</h3>
+          <p>Fecha: {{ payment.payment_date | date:'fullDate' }}</p>
+        </ion-label>
+
+        <ion-button size="small" (click)="viewReceipt(payment)">Recibo</ion-button>
+        <ion-button color="success" size="small" (click)="sentReceipt(payment)">Compartir</ion-button>
+
+
+      </ion-item>
+    </ion-list>
+</ion-content>
+

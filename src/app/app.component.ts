@@ -1,4 +1,9 @@
-import { Component } from '@angular/core';
+import { ChangeDetectorRef, Component } from '@angular/core';
+import { NetworkService } from './core/services/network.service';
+import { LoadingService } from './core/services/loading.service';
+import { Storage } from '@ionic/storage-angular';
+import { NgxUiLoaderService } from 'ngx-ui-loader';
+
 @Component({
   selector: 'app-root',
   templateUrl: 'app.component.html',
@@ -6,14 +11,24 @@ import { Component } from '@angular/core';
   standalone: false,
 })
 export class AppComponent {
-  public appPages = [
-    { title: 'Inbox', url: '/folder/inbox', icon: 'mail' },
-    { title: 'Outbox', url: '/folder/outbox', icon: 'paper-plane' },
-    { title: 'Favorites', url: '/folder/favorites', icon: 'heart' },
-    { title: 'Archived', url: '/folder/archived', icon: 'archive' },
-    { title: 'Trash', url: '/folder/trash', icon: 'trash' },
-    { title: 'Spam', url: '/folder/spam', icon: 'warning' },
-  ];
-  public labels = ['Family', 'Friends', 'Notes', 'Work', 'Travel', 'Reminders'];
-  constructor() {}
+
+  constructor( private networkService: NetworkService, private laodingService: LoadingService,
+    private storage: Storage,  private loader: NgxUiLoaderService){
+    let entro = false;
+    this.laodingService.listenLoading().subscribe( value=> {
+
+      if( value){
+        this.loader.start();
+        entro= true;
+      }
+      else{
+        if(entro)
+        this.loader.stopAll();
+      }
+
+    })
+
+    this.storage.create();
+
+  }
 }

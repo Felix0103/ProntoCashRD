@@ -1,0 +1,16 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Seleccionar Ubicación</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="close()">Cerrar</ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+
+  <div id="map" style="height: 85vh;"></div>
+  <ion-footer>
+    <ion-button expand="full" (click)="save()">Guardar Ubicación</ion-button>
+  </ion-footer>
+</ion-content>

@@ -1,0 +1,55 @@
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-buttons slot="start">
+      <ion-menu-button ></ion-menu-button>
+    </ion-buttons>
+    <ion-title>Prestamos Con deudas</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+
+  <ion-searchbar aria-hidden [(ngModel)]="filter" placeholder="Buscar prestamos..."></ion-searchbar>
+
+  <ion-refresher slot="fixed" (ionRefresh)="loadLoans($event)">
+    <ion-refresher-content></ion-refresher-content>
+  </ion-refresher>
+
+  <ion-list  *ngIf="!isLoading; else cargando">
+       <ion-item-sliding *ngFor="let loan of loanFiltered()">
+          <ion-item>
+              <ion-label>
+
+                <h2><ion-badge color="primary" >{{loan.id}}-{{ loan.client.first_name | titlecase }} {{ loan.client.last_name | titlecase }} </ion-badge></h2>
+                <p>Tipo: {{ loan.loan_type.name }}</p>
+                <p>Monto: ${{ loan.loan_type_detail.loan_amount | number:'1.2-2' }} Cuotas: {{ loan.loan_type_detail.total_quotas | number:'1.2-2' }} de {{ loan.loan_type_detail.quota_amount | number:'1.2-2' }} </p>
+                <p>Cuotas Pendientes:  {{loan.pending_count}}  </p>
+                <p>Cuotas Enatraso: {{loan.overdue_count }}-${{loan.overdue_amount | number:'1.2-2'}} </p>
+                <p>
+                  <ion-badge [color]="loan.active ? 'success' : 'danger'">
+                    {{ loan.active ? 'Activo' : 'Inactivo' }}
+                  </ion-badge>
+                  <ion-badge color="danger" >Prestamo en atraso</ion-badge>
+                </p>
+              </ion-label>
+            </ion-item>
+            <ion-item-options side="end">
+              <ion-item-option class="option-round"  color="warning"  (click)="showPayment(loan )">
+                <ion-icon name="cash-outline" slot="icon-only"></ion-icon> Cobrar
+              </ion-item-option>
+            </ion-item-options>
+       </ion-item-sliding>
+    <ion-item lines="none" *ngIf="loans.length ===0 && !isLoading">No tienes prestamos con deudas pendientes</ion-item>
+  </ion-list>
+
+
+  <ng-template #cargando>
+    <ion-spinner name="dots" class="ion-padding"></ion-spinner>
+  </ng-template>
+
+  <ion-fab vertical="bottom" horizontal="end" slot="fixed">
+    <ion-fab-button  >
+      <ion-icon name="cash-outline"></ion-icon>
+    </ion-fab-button>
+  </ion-fab>
+</ion-content>

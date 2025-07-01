@@ -1,0 +1,31 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Detalle</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="cancel()">Cerrar</ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+  <form [formGroup]="detailForm">
+    <ion-item>
+      <ion-input type="number" labelPlacement="floating"  label="Monto de prestamo" aria-label formControlName="loan_amount"></ion-input>
+    </ion-item>
+
+    <ion-item>
+      <ion-input type="number" labelPlacement="floating"  label="Cantidad de pagos" aria-label  formControlName="total_quotas"></ion-input>
+    </ion-item>
+    <ion-item>
+      <ion-input type="number" labelPlacement="floating"  label="Monto de cuota" aria-label formControlName="quota_amount"></ion-input>
+    </ion-item>
+    <ion-item>
+      <ion-input labelPlacement="floating"  label="Detalles de prestamo" aria-label formControlName="description"></ion-input>
+    </ion-item>
+
+
+    <ion-button expand="block" (click)="save()" [disabled]="detailForm.invalid">
+      Guardar Detalle
+    </ion-button>
+  </form>
+</ion-content>
