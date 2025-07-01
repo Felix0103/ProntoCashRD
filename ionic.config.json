@@ -1,0 +1,7 @@
+{
+  "name": "ProntoCashRD",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "angular"
+}
