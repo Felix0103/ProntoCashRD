@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { ModalController, NavController } from '@ionic/angular';
+import { ModalController, NavController, ToastController } from '@ionic/angular';
 import { LoanService } from 'src/app/core/services/loan.service';
 import { QuotasModalComponent } from '../../modals/quotas-modal/quotas-modal.component';
 import { QuotasToPayModalComponent } from '../../modals/quotas-to-pay-modal/quotas-to-pay-modal.component';
@@ -16,7 +16,8 @@ export class LoanListComponent  implements OnInit {
   filter = '';
   isLoading = true;
   today = this.toDateOnly( new Date());
-  constructor(private loanService: LoanService, private navCtrl: NavController, private modalCtrl: ModalController,) { }
+  constructor(private loanService: LoanService, private navCtrl: NavController,
+     private modalCtrl: ModalController, private toastCtrl: ToastController) { }
 
   ngOnInit() {
     this.loadLoans();
@@ -85,6 +86,7 @@ export class LoanListComponent  implements OnInit {
         componentProps: { loan: loan },
       });
     await modal.present();
+    this.loadLoans();
   }
   async showPaymentHistory(loan: any){
     const modal = await this.modalCtrl.create({
@@ -93,5 +95,34 @@ export class LoanListComponent  implements OnInit {
         componentProps: { loan: loan },
       });
     await modal.present();
+  }
+  async refinanceLoan(loan: any){
+    const client = loan.client;
+    const totalPrestamo = Number(loan.loan_type_detail.loan_amount);
+    const totalToPay= Number(loan.loan_type_detail.quota_amount)*Number(loan.loan_type_detail.total_quotas);
+    const totalDue = Number(loan.overdue_amount);
+
+    if(totalDue >(totalToPay-totalPrestamo) ){
+           const toast = await this.toastCtrl.create({
+            message: 'No puedes reenganchar prestamos sin pagar el capital',
+            duration: 2000,
+            color: 'warning'
+          });
+          toast.present();
+      return;
+    }
+
+     this.navCtrl.navigateRoot(['/loans/new'], { queryParams: {
+        old_loan_id: loan.id,
+        overdue_amount: loan.overdue_amount,
+        client_id: client.id,
+        first_name: client.first_name,
+        last_name: client.last_name,
+        credit_limit: client.credit_limit,
+        loan_type_id: loan.loan_type_id,
+        loan_type_detail_id: loan.loan_type_detail_id,
+        collector_id: loan.collector_id
+      }
+    } );
   }
 }

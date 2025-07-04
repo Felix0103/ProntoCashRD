@@ -85,6 +85,9 @@
   </ion-item>
   <br>
   <br>
+  <div *ngIf="oldLoanId" class="text-red">
+    {{getInfoReLoan()}}
+  </div>
   <ion-button expand="block" type="submit" [disabled]="loanForm.invalid">
     Guardar Préstamo
   </ion-button>

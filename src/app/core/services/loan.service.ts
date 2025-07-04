@@ -223,7 +223,7 @@ export class LoanService {
       `Detalle:`;
 
     const detalles = payments.map((d: any) =>
-      `Cliente: ${d.loan.client.first_name} ${d.loan.client.last_name} ${d.loan.client.first_name} ${d.loan.client.last_name}\n` +
+      `Cliente: ${d.loan.client.first_name} ${d.loan.client.last_name}\n` +
       `Monto: ${Number(d.total_amount).toFixed(2)}\n` +
       `Fecha: ${this.datePipe.transform(d.payment_date, 'dd/MM/yyyy')}\n` +
       `-----------------------`

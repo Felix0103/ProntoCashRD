@@ -10,6 +10,8 @@ import { ActivatedRoute } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { ClientService } from 'src/app/core/services/client.service';
 import { firstValueFrom } from 'rxjs';
+import { AppService } from 'src/app/core/services/app.service';
+import { formatDate } from '@angular/common';
 
 @Component({
   selector: 'app-loan-new',
@@ -27,12 +29,15 @@ export class LoanNewComponent  implements OnInit {
   selectedCollector: any = null;
   weekDays = environment.weekDays;
   chunkedWeekDays: any[] = [];
+  oldLoanId!: string;
+  overDue = 0;
 
   constructor(private modalCtrl: ModalController, private loanService: LoanService,
     private cd: ChangeDetectorRef, private fb: FormBuilder, private loanTypeService: LoanTypeService,
          private toastCtrl: ToastController,
           private navCtrl: NavController, private route: ActivatedRoute, private toastrService:ToastrService,
-          private clientService: ClientService, private alertController: AlertController
+          private clientService: ClientService, private alertController: AlertController,
+          private appService: AppService
   ) {
         this.loanForm = this.fb.group({
           client_id: ['', Validators.required],
@@ -42,22 +47,40 @@ export class LoanNewComponent  implements OnInit {
           collector_id:[],
           skip_weekdays: this.fb.array(
             this.weekDays.map(() => new FormControl(false))
-          )
+          ),
+          old_loan_id:['']
         });
-      this.route.queryParams.subscribe(params => {
+
+  }
+  setInitialValue(){
+    this.route.queryParams.subscribe(params => {
         if(params['client_id']){
           this.selectedCustomer = {id:params['client_id'], first_name:params['first_name'], last_name:params['last_name'] }
           this.loanForm.patchValue({client_id: params['client_id']});
         }
-
-      });
+        if(params['old_loan_id']){
+          this.oldLoanId = params['old_loan_id'];
+          this.loanForm.patchValue({old_loan_id: params['old_loan_id']});
+          this.overDue = Number(params['overdue_amount']);
+          this.selectedCustomer = {id:params['client_id'], first_name:params['first_name'], last_name:params['last_name'] }
+          this.loanForm.patchValue({client_id: params['client_id']});
+          this.loanForm.patchValue({loan_type_id: Number(params['loan_type_id'])});
+          this.loanForm.patchValue({loan_type_detail_id: Number(params['loan_type_detail_id'])});
+          this.appService.getUser(params['collector_id']).subscribe((user:any)=>{
+              this.selectedCollector = {id:user.data.id, first_name:user.data.first_name, last_name:user.data.last_name}
+              this.loanForm.patchValue({collector_id: params['collector_id']});
+          });
+          const today = formatDate(new Date(), 'yyyy-MM-dd', 'en-US');
+          this.loanForm.patchValue({start_date: today});
+        }
+    });
   }
-
   ngOnInit() {
 
 
     this.loanTypeService.getLoanTypes().subscribe( (resp)=>{
       this.loanTypes =resp;
+      this.setInitialValue();
     })
     this.loanForm.get('loan_type_id')?.valueChanges.subscribe( value=> {
       this.loanForm.patchValue({loan_type_detail_id:''})
@@ -189,13 +212,23 @@ export class LoanNewComponent  implements OnInit {
 
     this.loanService.saveLoan(payload).subscribe({
         next: async (data) => {
-          const toast = await this.toastCtrl.create({
-            message: 'Prestamo creado con éxito',
-            duration: 2000,
-            color: 'success'
-          });
-          toast.present();
-          this.navCtrl.navigateRoot(['/loans/edit', data.data.id]);
+          if(!data.success){
+           const toast = await this.toastCtrl.create({
+              message: data.message,
+              duration: 2000,
+              color: 'success'
+            });
+            toast.present();
+          }else{
+            const toast = await this.toastCtrl.create({
+              message: 'Prestamo creado con éxito',
+              duration: 2000,
+              color: 'success'
+            });
+            toast.present();
+            this.navCtrl.navigateRoot(['/loans/edit', data.data.id]);
+          }
+
         },
         error: async (err) => {
 
@@ -207,5 +240,14 @@ export class LoanNewComponent  implements OnInit {
           toast.present();
         }
     })
+  }
+
+  getInfoReLoan(){
+    if(this.loanForm.value.loan_type_detail_id){
+      const detail = this.loanTypeDetails.find(x=> x.id===this.loanForm.value.loan_type_detail_id );
+      return `Este es un re-enganche el cliente debe ${this.overDue}, este prestamo es de ${detail.loan_amount} le debes entregar al cliente ${detail.loan_amount - this.overDue}`;
+    }
+
+    return `Este es un re-enganche un prestamo que debe ${this.overDue}`;
   }
 }
