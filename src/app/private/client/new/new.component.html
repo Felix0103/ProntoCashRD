@@ -9,7 +9,7 @@
   </ion-toolbar>
 </ion-header>
 
-<ion-content class="ion-padding">
+<ion-content class="ion-padding" [fullscreen]="true" >
   <form [formGroup]="formClient" (ngSubmit)="saveClient()">
     <ion-item>
       <ion-label position="floating">Nombre</ion-label>

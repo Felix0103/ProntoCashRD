@@ -15,6 +15,7 @@ export class PaymentsComponent  implements OnInit {
   payments: any[] = [];
    date_start:any;
    date_end:any;
+  totalCollected =0;
   constructor(private loanService: LoanService, private modalCtrl: ModalController) { }
 
   ngOnInit() {
@@ -23,6 +24,7 @@ export class PaymentsComponent  implements OnInit {
   search(){
    this.loanService.getLoanPaymentsByDateRange(this.startDate,this.endDate).subscribe((resp:any)=>{
       this.payments=resp.data;
+      this.totalCollected = this.payments.reduce( (total: number, pago: any) =>  total + (+ pago.total_amount), 0 )
     })
   }
   async viewReceipt(payment: any){
@@ -43,5 +45,8 @@ export class PaymentsComponent  implements OnInit {
   datePickEnd(){
 
     this.endDate = this.date_end.substring(0, 10);
+  }
+  printPayments(){
+     this.loanService.printPayments(this.startDate, this.endDate, this.payments, this.totalCollected );
   }
 }

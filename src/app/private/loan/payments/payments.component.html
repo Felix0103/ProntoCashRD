@@ -7,8 +7,8 @@
   </ion-toolbar>
 </ion-header>
 
-<ion-content>
-   <ion-card-content>
+<ion-content  scroll-y="false">
+   <ion-card-content class="card-filter">
       <ion-grid class="ion-no-padding">
         <ion-row class="ion-align-items-center">
             <ion-col size="6">
@@ -80,20 +80,33 @@
     <ion-button expand="block" (click)="search()">Buscar cobros</ion-button>
    </ion-card-content>
 
+   <div class="lista-scroll">
+     <ion-list *ngFor="let payment of payments">
+       <ion-item>
 
-    <ion-list *ngFor="let payment of payments">
-      <ion-item>
+         <ion-label>
+           <h3>{{ payment.loan.client.first_name | titlecase}} {{ payment.loan.client.last_name | titlecase}}</h3>
+           <h3>Monto {{ payment.total_amount | currency:'DOP'  }}</h3>
+           <p>Fecha: {{ payment.payment_date | date:'shortDate' }}</p>
+         </ion-label>
 
-        <ion-label>
-          <h3>{{ payment.loan.client.first_name | titlecase}} {{ payment.loan.client.last_name | titlecase}}</h3>
-          <h3>Monto {{ payment.total_amount | currency:'DOP'  }}</h3>
-          <p>Fecha: {{ payment.payment_date | date:'shortDate' }}</p>
-        </ion-label>
-
-        <ion-button size="small" (click)="viewReceipt(payment)">Recibo</ion-button>
-        <ion-button color="success" size="small" (click)="sentReceipt(payment)">Compartir</ion-button>
+         <ion-button size="small" (click)="viewReceipt(payment)">Recibo</ion-button>
+         <ion-button color="success" size="small" (click)="sentReceipt(payment)">Compartir</ion-button>
 
 
-      </ion-item>
-    </ion-list>
+       </ion-item>
+     </ion-list>
+   </div>
+
 </ion-content>
+   <ion-fab vertical="bottom" horizontal="end" slot="fixed" *ngIf="totalCollected >0">
+  <ion-fab-button color="success" (click)="printPayments()" >
+    <ion-icon name="print-outline"></ion-icon>
+  </ion-fab-button>
+</ion-fab>
+<ion-footer collapse="fade">
+  <ion-toolbar>
+    <ion-title class="ion-text-center">Total: {{totalCollected | currency:'DOP'}} &nbsp;&nbsp;&nbsp;</ion-title>
+
+  </ion-toolbar>
+</ion-footer>

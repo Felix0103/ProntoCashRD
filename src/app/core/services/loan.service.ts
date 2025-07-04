@@ -50,30 +50,51 @@ export class LoanService {
     }
 
     generateReceiptPDF(payment: any): Blob {
-      const businessName ='Soluciones Financieras Álvarez & Vilorio';
-      const doc = new jsPDF();
+      const businessName ='Soluciones Financieras';
+      const businessName2 ='Álvarez & Vilorio';
 
-      // Encabezado con nombre del negocio centrado
-      doc.setFontSize(16);
-      doc.setFont('helvetica', 'bold');
-      doc.text(businessName.toUpperCase(), 105, 15, { align: 'center' });
-
-      doc.setFontSize(12);
-      doc.setFont('helvetica', 'normal');
-      doc.text('RECIBO DE PAGO', 10, 30);
-      doc.text(`Fecha: ${payment.payment_date}`, 10, 40);
-      doc.text(`Total: ${Number(payment.total_amount).toFixed(2)} RD$`, 10, 50);
-
-      let y = 60;
-      payment.loan_payment_details.forEach((d: any) => {
-        doc.text(`Cuota #${d.loan_detail.number_quota } - ${Number(d.amount_applied).toFixed(2)} RD$`, 10, y);
-        y += 10;
+      const doc = new jsPDF({
+        orientation: 'portrait',
+        unit: 'mm',
+        format: [58, 200]  // ancho: 58mm, alto: 200mm (puedes ajustarlo)
       });
+
+        // 🔹 Header centrado
+
+      const pageWidth = 58;
+      const textWidth = doc.getTextWidth(businessName);
+      const xCentered = (pageWidth - textWidth) / 2;
+      doc.setFontSize(12);
+      doc.setFont('helvetica', 'bold');
+      doc.text(businessName, xCentered+5, 10);
+
+      const textWidth2 = doc.getTextWidth(businessName2);
+      const xCentered2 = (pageWidth - textWidth2) / 2;
+      doc.text(businessName2, xCentered2, 15);
+
+
+      doc.setFontSize(10);
+      doc.setFont('helvetica', 'normal');
+      doc.text('RECIBO DE PAGO', 13, 20);
+      doc.text(`Fecha: ${this.datePipe.transform( payment.payment_date, 'dd/MM/yyyy')}`, 3, 30);
+      doc.text(`Total: RD$${Number(payment.total_amount).toFixed(2)} `, 3, 35);
+      doc.setFont('helvetica', 'bold');
+      doc.text('---------------------------------------------', 2, 38);
+      doc.text('Cuotas:', 2, 42);
+
+      let y = 47;
+      doc.setFontSize(8);
+      payment.loan_payment_details.forEach((d: any) => {
+        doc.text(`Cuota #${d.loan_detail.number_quota } - RD$${Number(d.amount_applied).toFixed(2)} `, 10, y);
+        y += 5;
+      });
+     doc.text('Gracias por su pago', 10, y);
 
     const blob = doc.output('blob');
     return blob;
-
   }
+
+
   async savePDF(blob: Blob, fileName = 'recibo.pdf'): Promise<string> {
     const base64 = await this.blobToBase64(blob);
 
@@ -147,12 +168,107 @@ export class LoanService {
 
       const texto = `${contenido}\n${detalles}\n-----------------------`;
 
-      const w = window.open('', '', 'width=250,height=600');
+      const printWindow = window.open('', '', 'width=250,height=600');
 
-      if (w) {
-        w.document.write(`<pre style="font-size:14px;">${texto}</pre>`);
-        w.document.close();
-        w.print();
-      }
+      if (printWindow) {
+       printWindow.document.write(`
+        <html>
+          <head>
+            <style>
+              @media print {
+                body {
+                  margin: 0;
+                  padding: 0;
+                  width: 58mm;
+                  font-family: monospace;
+                  font-size: 12px;
+                  white-space: pre-wrap;
+                }
+                pre {
+                  margin: 0;
+                  padding: 10px;
+                  width: 58mm;
+                }
+              }
+              body {
+                font-family: monospace;
+                font-size: 12px;
+                width: 58mm;
+                padding: 10px;
+                white-space: pre-wrap;
+              }
+            </style>
+          </head>
+          <body>
+            <pre>${texto}</pre>
+          </body>
+        </html>
+      `);
+      printWindow.document.close();
+      printWindow.print();
+    }
+
+  }
+  printPayments(startDate:string, endDate: string, payments: any, totalPaid: number) {
+    const contenido =
+      `Soluciones Financieras\n` +
+      `  Álvarez & Vilorio\n` +
+      `-----------------------\n` +
+      `         COBROS\n` +
+      `-----------------------\n` +
+      `Fecha Inicio: ${this.datePipe.transform(startDate, 'dd/MM/yyyy')}\n` +
+      `Fecha Final: ${this.datePipe.transform(endDate, 'dd/MM/yyyy')}\n` +
+      `Total: ${Number(totalPaid).toFixed(2)} RD$\n` +
+      `-----------------------\n` +
+      `Detalle:`;
+
+    const detalles = payments.map((d: any) =>
+      `Cliente: ${d.loan.client.first_name} ${d.loan.client.last_name} ${d.loan.client.first_name} ${d.loan.client.last_name}\n` +
+      `Monto: ${Number(d.total_amount).toFixed(2)}\n` +
+      `Fecha: ${this.datePipe.transform(d.payment_date, 'dd/MM/yyyy')}\n` +
+      `-----------------------`
+    ).join('\n');
+
+    const texto = `${contenido}\n${detalles}\n`;
+
+    const printWindow = window.open('', '', 'width=300,height=600'); // 300px ≈ 58mm
+
+    if (printWindow) {
+      printWindow.document.write(`
+        <html>
+          <head>
+            <style>
+              @media print {
+                body {
+                  margin: 0;
+                  padding: 0;
+                  width: 58mm;
+                  font-family: monospace;
+                  font-size: 12px;
+                  white-space: pre-wrap;
+                }
+                pre {
+                  margin: 0;
+                  padding: 10px;
+                  width: 58mm;
+                }
+              }
+              body {
+                font-family: monospace;
+                font-size: 12px;
+                width: 58mm;
+                padding: 10px;
+                white-space: pre-wrap;
+              }
+            </style>
+          </head>
+          <body>
+            <pre>${texto}</pre>
+          </body>
+        </html>
+      `);
+      printWindow.document.close();
+      printWindow.print();
+    }
   }
 }

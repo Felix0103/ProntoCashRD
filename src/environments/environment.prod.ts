@@ -1,10 +1,8 @@
 export const environment = {
   production: true,
   appName: 'ProntoCashRD',
-//  apiURL: 'https://backend.abarbersupplies.net',
-  apiURL: 'http://127.0.0.1:8000',
-
-  appShellConfig: {
+ apiURL: 'https://loanback.abarbersupplies.net',
+ appShellConfig: {
     debug: false,
     networkDelay: 500
   },

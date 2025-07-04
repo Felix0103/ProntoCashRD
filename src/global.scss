@@ -1,4 +1,18 @@
 // http://ionicframework.com/docs/theming/
+
+@use "swiper/scss" as *;
+@use "swiper/scss/autoplay" as *;
+@use "swiper/scss/pagination" as *;
+@use "@ionic/angular/css/ionic-swiper" as *;
+
+// EXTRA GLOBAL STYLES
+// Add custom Ionic Colors
+@use "theme/custom-ion-colors.scss" as *;
+// Add base app styles
+@use "theme/app-defaults.scss" as *;
+// Add base shell styles
+@use "theme/shell-defaults.scss" as *;
+
 @import url("https://fonts.googleapis.com/css?family=Rubik:300,400,500,700");
 
 @import "~@ionic/angular/css/core.css";
@@ -12,18 +26,9 @@
 @import "~@ionic/angular/css/text-transformation.css";
 @import "~@ionic/angular/css/flex-utils.css";
 
-@import "swiper/scss";
-@import "swiper/scss/autoplay";
-@import "swiper/scss/pagination";
-@import "@ionic/angular/css/ionic-swiper";
 
-// EXTRA GLOBAL STYLES
-// Add custom Ionic Colors
-@import "theme/custom-ion-colors.scss";
-// Add base app styles
-@import "theme/app-defaults.scss";
-// Add base shell styles
-@import "theme/shell-defaults.scss";
+
+
 ion-item-option{
     margin-right: 2px;
 }
@@ -35,4 +40,19 @@ ion-item-option{
 }
 .col-3{
     width: 25%;
+}
+ion-toolbar {
+  padding-top: 20px !important;
+
+}
+.main-application{
+  margin: 0 auto;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.05);
+  border-radius: 8px;
+  background: #fff;
+}
+@media (min-width: 768px) {
+  .main-application{
+    max-width: 600px;
+  }
 }
