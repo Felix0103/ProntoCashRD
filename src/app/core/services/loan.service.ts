@@ -75,7 +75,7 @@ export class LoanService {
 
       doc.setFontSize(10);
       doc.setFont('helvetica', 'normal');
-      doc.text('RECIBO DE PAGO', 13, 20);
+      doc.text('RECIBO DE PAGO', 13, 22);
       doc.text(`Fecha: ${this.datePipe.transform( payment.payment_date, 'dd/MM/yyyy')}`, 3, 30);
       doc.text(`Total: RD$${Number(payment.total_amount).toFixed(2)} `, 3, 35);
       doc.setFont('helvetica', 'bold');
@@ -151,22 +151,38 @@ export class LoanService {
   }
   printReceipt(payment: any) {
 
+    const total = new Intl.NumberFormat('es-DO',{
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2
+      }).format(payment.total_amount);
       const contenido =
       `Soluciones Financieras\n`+
       `  Álvarez & Vilorio\n`+
       `-----------------------\n`+
       `    RECIBO DE PAGO\n`+
       `-----------------------\n`+
+      `Cliente: ${payment.loan.client.first_name} ${payment.loan.client.last_name}`.substring(0,24)+'\n'+
       `Fecha: ${this.datePipe.transform( payment.payment_date, 'dd/MM/yyyy')}\n`+
-      `Total: ${Number(payment.total_amount).toFixed(2)} RD$\n`+
+      `Total: RD$${total} \n`+
       `-----------------------\n`+
-      `Detalle:`;
+      `Cuotas Cobradas:\n` +
+      `-----------------------\n`;
 
-      const detalles = payment.loan_payment_details.map((d:LoanPaymentDetail) =>
-        `Cuota #${d.loan_detail.number_quota} - ${Number(d.amount_applied).toFixed(2)} RD$`
+      const detalles = payment.loan_payment_details.map((d:any) =>
+      {
+         const totales = new Intl.NumberFormat('es-DO',{
+          minimumFractionDigits: 2,
+          maximumFractionDigits: 2
+        }).format(d.amount_applied);
+
+        return `Cuota #${d.loan_detail.number_quota} - RD$${totales} `
+      }
+
       ).join('\n');
 
-      const texto = `${contenido}\n${detalles}\n-----------------------`;
+      const texto = `${contenido}\n${detalles}\n`+
+      `-----------------------\n`+
+      ' Gracias por su pago\n';
 
       const printWindow = window.open('', '', 'width=250,height=600');
 
@@ -210,6 +226,11 @@ export class LoanService {
 
   }
   printPayments(startDate:string, endDate: string, payments: any, totalPaid: number) {
+
+    const total = new Intl.NumberFormat('es-DO',{
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2
+    }).format(totalPaid);
     const contenido =
       `Soluciones Financieras\n` +
       `  Álvarez & Vilorio\n` +
@@ -218,20 +239,26 @@ export class LoanService {
       `-----------------------\n` +
       `Fecha Inicio: ${this.datePipe.transform(startDate, 'dd/MM/yyyy')}\n` +
       `Fecha Final: ${this.datePipe.transform(endDate, 'dd/MM/yyyy')}\n` +
-      `Total: ${Number(totalPaid).toFixed(2)} RD$\n` +
+      `Total: RD$${total} \n` +
       `-----------------------\n` +
-      `Detalle:`;
+      `Montos Cobrados:`;
 
     const detalles = payments.map((d: any) =>
-      `Cliente: ${d.loan.client.first_name} ${d.loan.client.last_name}\n` +
-      `Monto: ${Number(d.total_amount).toFixed(2)}\n` +
+    {
+      const totale = new Intl.NumberFormat('es-DO',{
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2
+      }).format(d.total_amount);
+      return `Cliente: ${d.loan.client.first_name} ${d.loan.client.last_name}`.substring(0,24) + `\n` +
+      `Monto: RD$${totale}\n` +
       `Fecha: ${this.datePipe.transform(d.payment_date, 'dd/MM/yyyy')}\n` +
-      `-----------------------`
+      `-----------------------`;
+    }
     ).join('\n');
 
     const texto = `${contenido}\n${detalles}\n`;
 
-    const printWindow = window.open('', '', 'width=300,height=600'); // 300px ≈ 58mm
+    const printWindow = window.open('', '', 'width=300,height=300'); // 300px ≈ 58mm
 
     if (printWindow) {
       printWindow.document.write(`

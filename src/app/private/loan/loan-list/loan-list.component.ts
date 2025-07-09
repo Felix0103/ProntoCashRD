@@ -75,6 +75,8 @@ export class LoanListComponent  implements OnInit {
         componentProps: { loan: loan },
       });
     await modal.present();
+    const { data } = await modal.onWillDismiss();
+    this.loadLoans();
   }
   toDateOnly(date: Date): Date {
     return new Date(date.getFullYear(), date.getMonth(), date.getDate());
@@ -86,6 +88,7 @@ export class LoanListComponent  implements OnInit {
         componentProps: { loan: loan },
       });
     await modal.present();
+    const { data } = await modal.onWillDismiss();
     this.loadLoans();
   }
   async showPaymentHistory(loan: any){
